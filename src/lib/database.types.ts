@@ -72,7 +72,7 @@ export type Database = {
             foreignKeyName: "compras_usuario_id_fkey"
             columns: ["usuario_id"]
             isOneToOne: false
-            referencedRelation: "perfiles"
+            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
@@ -190,7 +190,7 @@ export type Database = {
           },
         ]
       }
-      perfiles: {
+      usuarios: {
         Row: {
           actualizado_en: string
           avatar_url: string | null
@@ -260,7 +260,7 @@ export type Database = {
             foreignKeyName: "prestamos_usuario_id_fkey"
             columns: ["usuario_id"]
             isOneToOne: false
-            referencedRelation: "perfiles"
+            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
