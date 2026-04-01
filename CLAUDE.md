@@ -135,13 +135,25 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 - Comandos de test validados.
 - Pendientes críticos acordados.
 
+## Pendientes antes de producción
+
+> ⚠️ Estas configuraciones están desactivadas intencionalmente durante el desarrollo. **Deben activarse antes de desplegar a producción.**
+
+| # | Tarea | Dónde |
+|---|-------|-------|
+| 1 | Activar **confirmación de email** al registrarse | Supabase Dashboard → Authentication → Providers → Email → "Confirm email" |
+| 2 | Implementar **"Pedir préstamo"** en tarjeta y página de libro | Hito 5 — `src/app/(public)/libros/[id]/page.tsx` + Server Action |
+| 3 | Implementar **"Añadir al carrito"** en tarjeta y página de libro | Hito futuro — requiere tabla `carrito` en BD y página `/carrito` |
+| 4 | Crear página de **detalle de libro** con sinopsis completa | Campos `descripcion` vacíos en seed data — rellenar o dejar para contenido real |
+| 5 | Crear página del **carrito de compra** (`/carrito`) | Ver items añadidos, cantidades y checkout |
+
 ## Hoja de Ruta (Hitos)
 
 | # | Hito | Estado |
 |---|------|--------|
 | 1 | Configuración inicial + estructura de carpetas | ✅ |
-| 2 | Esquema de base de datos en Supabase (Libros, Usuarios, Préstamos) | Pendiente |
-| 3 | Autenticación con roles (Admin/User) y Middleware | Pendiente |
+| 2 | Esquema de base de datos en Supabase (Libros, Usuarios, Préstamos) | ✅ |
+| 3 | Autenticación con roles (Admin/User) y Middleware | ✅ |
 | 4 | Dashboard Administrativo (gestión de stock) | Pendiente |
 | 5 | Catálogo público y flujo de préstamos/ventas | Pendiente |
 | 6 | CRUD completo de libros | Pendiente |
