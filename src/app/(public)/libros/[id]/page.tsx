@@ -15,7 +15,7 @@ export default async function LibroPage({ params }: Props) {
   const { data: libro } = await supabase
     .from('libros')
     .select(`
-      id, titulo, autor, isbn, descripcion, portada_url, precio, stock, creado_en,
+      id, titulo, autor, isbn, descripcion, portada_url, precio_compra, precio_prestamo, stock, creado_en,
       editoriales (nombre, pais, sitio_web),
       libros_categorias (
         categorias (nombre)
@@ -23,6 +23,7 @@ export default async function LibroPage({ params }: Props) {
     `)
     .eq('id', id)
     .is('eliminado_en', null)
+    .eq('visible', true)
     .single()
 
   if (!libro) notFound()
@@ -64,19 +65,6 @@ export default async function LibroPage({ params }: Props) {
 
         {/* Información */}
         <div className="flex flex-1 flex-col gap-4">
-          {/* Categorías */}
-          {categorias.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {categorias.map((cat) => (
-                <span
-                  key={cat}
-                  className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300"
-                >
-                  {cat}
-                </span>
-              ))}
-            </div>
-          )}
 
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
@@ -85,9 +73,14 @@ export default async function LibroPage({ params }: Props) {
             <p className="mt-1 text-base text-gray-600 dark:text-gray-400">{libro.autor}</p>
           </div>
 
-          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-            {Number(libro.precio).toFixed(2)} €
-          </p>
+          <div className="flex flex-col gap-1">
+            <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
+              Préstamo: {Number(libro.precio_prestamo).toFixed(2)} €
+            </p>
+            <p className="text-xl font-bold text-gray-700 dark:text-gray-300">
+              Compra: {Number(libro.precio_compra).toFixed(2)} €
+            </p>
+          </div>
 
           {/* Disponibilidad */}
           <div className="flex items-center gap-2">

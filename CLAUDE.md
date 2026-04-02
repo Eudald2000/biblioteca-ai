@@ -134,6 +134,17 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 - Decisiones clave de esquema de DB y roles.
 - Comandos de test validados.
 - Pendientes críticos acordados.
+- Avisarme ante de realizar la accion de compactar, para que pueda revisar el resumen antes de confirmar.
+
+## Esquema de BD — Decisiones clave
+
+| Tabla | Campo destacado | Notas |
+|-------|----------------|-------|
+| `libros` | `precio_compra` + `precio_prestamo` | Dos precios separados. Compra = venta permanente; préstamo = alquiler temporal |
+| `libros` | `visible boolean DEFAULT true` | Controla visibilidad en catálogo público sin borrar el registro |
+| `libros` | `eliminado_en timestamptz` | Soft delete — reservado para borrado lógico definitivo |
+| `compras` | `precio_compra` | Snapshot del precio en el momento de la compra |
+| `prestamos` | `precio_prestamo` | Snapshot del precio en el momento del préstamo |
 
 ## Pendientes antes de producción
 
@@ -143,9 +154,9 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 |---|-------|-------|
 | 1 | Activar **confirmación de email** al registrarse | Supabase Dashboard → Authentication → Providers → Email → "Confirm email" |
 | 2 | Implementar **"Pedir préstamo"** en tarjeta y página de libro | Hito 5 — `src/app/(public)/libros/[id]/page.tsx` + Server Action |
-| 3 | Implementar **"Añadir al carrito"** en tarjeta y página de libro | Hito futuro — requiere tabla `carrito` en BD y página `/carrito` |
-| 4 | Crear página de **detalle de libro** con sinopsis completa | Campos `descripcion` vacíos en seed data — rellenar o dejar para contenido real |
-| 5 | Crear página del **carrito de compra** (`/carrito`) | Ver items añadidos, cantidades y checkout |
+| 3 | Implementar **"Añadir al carrito"** en tarjeta y página de libro | Hito 5 — requiere tabla `carrito` en BD y página `/carrito` |
+| 4 | Crear página del **carrito de compra** (`/carrito`) | Ver items añadidos, cantidades y checkout |
+| 5 | Configurar **RLS completo** en todas las tablas | Actualmente permisivo para desarrollo — revisar antes de producción |
 
 ## Hoja de Ruta (Hitos)
 
@@ -154,6 +165,31 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | 1 | Configuración inicial + estructura de carpetas | ✅ |
 | 2 | Esquema de base de datos en Supabase (Libros, Usuarios, Préstamos) | ✅ |
 | 3 | Autenticación con roles (Admin/User) y Middleware | ✅ |
-| 4 | Dashboard Administrativo (gestión de stock) | Pendiente |
+| 4 | Dashboard Administrativo | ✅ parcial |
 | 5 | Catálogo público y flujo de préstamos/ventas | Pendiente |
-| 6 | CRUD completo de libros | Pendiente |
+| 6 | Testing (Jest + RTL) | Pendiente |
+
+### Hito 4 — Dashboard (detalle)
+
+| Sección | Estado | Notas |
+|---------|--------|-------|
+| Stats en tiempo real (inicio) | ✅ | 8 métricas con Supabase Realtime |
+| CRUD Libros | ✅ | Tabla con filtros, búsqueda, paginación, orden, toggle visible |
+| CRUD Editoriales | ✅ | Guard: no eliminar si tiene libros |
+| CRUD Categorías | ✅ | Guard: no eliminar si tiene libros |
+| CRUD Usuarios | Pendiente | Listar, ver detalle, cambiar rol, desactivar |
+| Gestión Préstamos | Pendiente | Listar, filtrar por estado, marcar como devuelto |
+| Gestión Ventas/Compras | Pendiente | Historial de compras por usuario/libro |
+
+### Hito 5 — Catálogo y flujo de transacciones (detalle)
+
+| Feature | Estado | Notas |
+|---------|--------|-------|
+| Catálogo público (listado) | ✅ | Filtra `visible=true AND eliminado_en IS NULL` |
+| Página de detalle de libro | ✅ | Muestra precios, editorial, categorías, sinopsis |
+| Server Action "Pedir préstamo" | Pendiente | Requiere: decrementar stock, insertar en `prestamos` con precio snapshot, validar disponibilidad |
+| Server Action "Comprar libro" | Pendiente | Requiere: decrementar stock, insertar en `compras` con precio snapshot |
+| Tabla `carrito` en BD | Pendiente | Campos: usuario_id, libro_id, cantidad, tipo (prestamo/compra) |
+| Página `/carrito` | Pendiente | Ver items, cantidades, checkout |
+| Página `/cuenta/prestamos` | Pendiente | Historial de préstamos del usuario, estado, devolución |
+| Página `/cuenta/compras` | Pendiente | Historial de compras del usuario |

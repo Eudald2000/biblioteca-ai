@@ -118,9 +118,11 @@ export type Database = {
           id: string
           isbn: string | null
           portada_url: string | null
-          precio: number
+          precio_compra: number
+          precio_prestamo: number
           stock: number
           titulo: string
+          visible: boolean
         }
         Insert: {
           actualizado_en?: string
@@ -132,9 +134,11 @@ export type Database = {
           id?: string
           isbn?: string | null
           portada_url?: string | null
-          precio?: number
+          precio_compra?: number
+          precio_prestamo?: number
           stock?: number
           titulo: string
+          visible?: boolean
         }
         Update: {
           actualizado_en?: string
@@ -146,9 +150,11 @@ export type Database = {
           id?: string
           isbn?: string | null
           portada_url?: string | null
-          precio?: number
+          precio_compra?: number
+          precio_prestamo?: number
           stock?: number
           titulo?: string
+          visible?: boolean
         }
         Relationships: [
           {
@@ -226,6 +232,7 @@ export type Database = {
           fecha_vencimiento: string
           id: string
           libro_id: string
+          precio_prestamo: number
           usuario_id: string
         }
         Insert: {
@@ -236,6 +243,7 @@ export type Database = {
           fecha_vencimiento: string
           id?: string
           libro_id: string
+          precio_prestamo?: number
           usuario_id: string
         }
         Update: {
@@ -246,6 +254,7 @@ export type Database = {
           fecha_vencimiento?: string
           id?: string
           libro_id?: string
+          precio_prestamo?: number
           usuario_id?: string
         }
         Relationships: [
