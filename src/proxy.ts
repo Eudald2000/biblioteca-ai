@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { RUTAS } from '@/constants'
 
-const RUTAS_PROTEGIDAS = [RUTAS.DASHBOARD, RUTAS.CUENTA]
+const RUTAS_PROTEGIDAS = [RUTAS.DASHBOARD, RUTAS.CATALOGO, RUTAS.CUENTA]
 const RUTAS_SOLO_INVITADOS = [RUTAS.LOGIN, RUTAS.REGISTRO]
 
 export async function proxy(request: NextRequest) {
@@ -26,23 +26,36 @@ export async function proxy(request: NextRequest) {
     },
   )
 
-  // Refresca la sesión — imprescindible para SSR con @supabase/ssr
   const { data: { user } } = await supabase.auth.getUser()
 
   const pathname = request.nextUrl.pathname
-  const estaAutenticado = !!user
-
-  // Rutas privadas: redirigir a /login si no hay sesión
   const esRutaProtegida = RUTAS_PROTEGIDAS.some((ruta) => pathname.startsWith(ruta))
-  if (esRutaProtegida && !estaAutenticado) {
-    const url = request.nextUrl.clone()
-    url.pathname = RUTAS.LOGIN
-    return NextResponse.redirect(url)
+  const esRutaSoloInvitado = RUTAS_SOLO_INVITADOS.some((ruta) => pathname.startsWith(ruta))
+
+  if (esRutaProtegida) {
+    if (!user) {
+      const url = request.nextUrl.clone()
+      url.pathname = RUTAS.LOGIN
+      return NextResponse.redirect(url)
+    }
+
+    // Verificar baneo en rutas protegidas
+    const { data: perfil } = await supabase
+      .from('usuarios')
+      .select('baneado')
+      .eq('id', user.id)
+      .single()
+
+    if (perfil?.baneado === true) {
+      await supabase.auth.signOut()
+      const url = request.nextUrl.clone()
+      url.pathname = RUTAS.LOGIN
+      url.search = '?baneado=1'
+      return NextResponse.redirect(url)
+    }
   }
 
-  // Rutas de auth: redirigir a /catalogo si ya hay sesión
-  const esRutaSoloInvitado = RUTAS_SOLO_INVITADOS.some((ruta) => pathname.startsWith(ruta))
-  if (esRutaSoloInvitado && estaAutenticado) {
+  if (esRutaSoloInvitado && user) {
     const url = request.nextUrl.clone()
     url.pathname = RUTAS.CATALOGO
     return NextResponse.redirect(url)

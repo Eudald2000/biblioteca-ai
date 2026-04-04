@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { RUTAS } from '@/constants'
 
-export function LoginForm() {
+export function LoginForm({ mensajeBaneo = false }: { mensajeBaneo?: boolean }) {
   const [estado, accion, pendiente] = useActionState<AuthState, FormData>(iniciarSesion, null)
 
   return (
@@ -18,6 +18,12 @@ export function LoginForm() {
           Accede a tu cuenta de la biblioteca
         </p>
       </div>
+
+      {mensajeBaneo && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-400" role="alert">
+          Tu cuenta ha sido suspendida. Contacta con el administrador.
+        </div>
+      )}
 
       {estado?.error && (
         <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-400" role="alert">

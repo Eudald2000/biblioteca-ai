@@ -118,9 +118,11 @@ export type Database = {
           id: string
           isbn: string | null
           portada_url: string | null
-          precio: number
+          precio_compra: number
+          precio_prestamo: number
           stock: number
           titulo: string
+          visible: boolean
         }
         Insert: {
           actualizado_en?: string
@@ -132,9 +134,11 @@ export type Database = {
           id?: string
           isbn?: string | null
           portada_url?: string | null
-          precio?: number
+          precio_compra?: number
+          precio_prestamo?: number
           stock?: number
           titulo: string
+          visible?: boolean
         }
         Update: {
           actualizado_en?: string
@@ -146,9 +150,11 @@ export type Database = {
           id?: string
           isbn?: string | null
           portada_url?: string | null
-          precio?: number
+          precio_compra?: number
+          precio_prestamo?: number
           stock?: number
           titulo?: string
+          visible?: boolean
         }
         Relationships: [
           {
@@ -190,33 +196,6 @@ export type Database = {
           },
         ]
       }
-      usuarios: {
-        Row: {
-          actualizado_en: string
-          avatar_url: string | null
-          creado_en: string
-          id: string
-          nombre_completo: string | null
-          rol: Database["public"]["Enums"]["rol_usuario"]
-        }
-        Insert: {
-          actualizado_en?: string
-          avatar_url?: string | null
-          creado_en?: string
-          id: string
-          nombre_completo?: string | null
-          rol?: Database["public"]["Enums"]["rol_usuario"]
-        }
-        Update: {
-          actualizado_en?: string
-          avatar_url?: string | null
-          creado_en?: string
-          id?: string
-          nombre_completo?: string | null
-          rol?: Database["public"]["Enums"]["rol_usuario"]
-        }
-        Relationships: []
-      }
       prestamos: {
         Row: {
           creado_en: string
@@ -226,6 +205,7 @@ export type Database = {
           fecha_vencimiento: string
           id: string
           libro_id: string
+          precio_prestamo: number
           usuario_id: string
         }
         Insert: {
@@ -236,6 +216,7 @@ export type Database = {
           fecha_vencimiento: string
           id?: string
           libro_id: string
+          precio_prestamo?: number
           usuario_id: string
         }
         Update: {
@@ -246,6 +227,7 @@ export type Database = {
           fecha_vencimiento?: string
           id?: string
           libro_id?: string
+          precio_prestamo?: number
           usuario_id?: string
         }
         Relationships: [
@@ -265,12 +247,42 @@ export type Database = {
           },
         ]
       }
+      usuarios: {
+        Row: {
+          actualizado_en: string
+          avatar_url: string | null
+          baneado: boolean
+          creado_en: string
+          id: string
+          nombre_completo: string | null
+          rol: Database["public"]["Enums"]["rol_usuario"]
+        }
+        Insert: {
+          actualizado_en?: string
+          avatar_url?: string | null
+          baneado?: boolean
+          creado_en?: string
+          id: string
+          nombre_completo?: string | null
+          rol?: Database["public"]["Enums"]["rol_usuario"]
+        }
+        Update: {
+          actualizado_en?: string
+          avatar_url?: string | null
+          baneado?: boolean
+          creado_en?: string
+          id?: string
+          nombre_completo?: string | null
+          rol?: Database["public"]["Enums"]["rol_usuario"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      es_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       estado_prestamo: "activo" | "devuelto" | "vencido"

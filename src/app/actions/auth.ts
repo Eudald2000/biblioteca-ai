@@ -34,9 +34,14 @@ export async function iniciarSesion(_prevState: AuthState, formData: FormData): 
 
   const { data: perfil } = await supabase
     .from('usuarios')
-    .select('rol')
+    .select('rol, baneado')
     .eq('id', user.id)
     .single()
+
+  if (perfil?.baneado) {
+    await supabase.auth.signOut()
+    return { error: 'Tu cuenta ha sido suspendida. Contacta con el administrador.' }
+  }
 
   if (perfil?.rol === 'admin') {
     redirect(RUTAS.DASHBOARD)

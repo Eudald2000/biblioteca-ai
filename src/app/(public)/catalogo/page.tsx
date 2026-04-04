@@ -6,8 +6,9 @@ export default async function CatalogoPage() {
   const supabase = await createClient()
   const { data: libros } = await supabase
     .from('libros')
-    .select('id, titulo, autor, portada_url, precio, stock')
+    .select('id, titulo, autor, portada_url, precio_compra, precio_prestamo, stock')
     .is('eliminado_en', null)
+    .eq('visible', true)
     .order('titulo')
 
   return (
@@ -47,9 +48,14 @@ export default async function CatalogoPage() {
                 </p>
               </Link>
               <p className="line-clamp-1 text-xs text-gray-500 dark:text-gray-400">{libro.autor}</p>
-              <p className="mt-1 text-sm font-bold text-blue-600 dark:text-blue-400">
-                {libro.precio.toFixed(2)} €
-              </p>
+              <div className="mt-1 flex flex-col gap-0.5">
+                <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                  Préstamo: {Number(libro.precio_prestamo).toFixed(2)} €
+                </p>
+                <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  Compra: {Number(libro.precio_compra).toFixed(2)} €
+                </p>
+              </div>
 
               {/* Botones de acción */}
               <div className="mt-2 flex flex-col gap-1.5">
