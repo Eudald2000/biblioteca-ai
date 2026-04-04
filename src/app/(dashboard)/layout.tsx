@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { cerrarSesion } from '@/app/actions/auth'
 import { RUTAS } from '@/constants'
+import { SidebarNav } from '@/components/layout/SidebarNav'
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const supabase = await createClient()
@@ -32,44 +33,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             📚 Biblioteca
           </Link>
         </div>
-        <nav className="flex-1 space-y-0.5 px-2 py-3">
-          <Link
-            href={RUTAS.DASHBOARD}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-          >
-            📊 Inicio
-          </Link>
-          <Link
-            href="/dashboard/libros"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-          >
-            📖 Libros
-          </Link>
-          <Link
-            href="/dashboard/editoriales"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-          >
-            🏢 Editoriales
-          </Link>
-          <Link
-            href="/dashboard/categorias"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-          >
-            🏷️ Categorías
-          </Link>
-          <Link
-            href="/dashboard/usuarios"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-          >
-            👥 Usuarios
-          </Link>
-          <Link
-            href="/dashboard/prestamos"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-          >
-            📋 Préstamos
-          </Link>
-        </nav>
+        <SidebarNav />
         <div className="border-t border-gray-200 px-3 py-4 dark:border-gray-800">
           <div className="mb-2 px-3 text-xs text-gray-500 dark:text-gray-400">
             {perfil?.nombre_completo ?? user.email}

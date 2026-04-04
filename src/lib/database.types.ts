@@ -196,33 +196,6 @@ export type Database = {
           },
         ]
       }
-      usuarios: {
-        Row: {
-          actualizado_en: string
-          avatar_url: string | null
-          creado_en: string
-          id: string
-          nombre_completo: string | null
-          rol: Database["public"]["Enums"]["rol_usuario"]
-        }
-        Insert: {
-          actualizado_en?: string
-          avatar_url?: string | null
-          creado_en?: string
-          id: string
-          nombre_completo?: string | null
-          rol?: Database["public"]["Enums"]["rol_usuario"]
-        }
-        Update: {
-          actualizado_en?: string
-          avatar_url?: string | null
-          creado_en?: string
-          id?: string
-          nombre_completo?: string | null
-          rol?: Database["public"]["Enums"]["rol_usuario"]
-        }
-        Relationships: []
-      }
       prestamos: {
         Row: {
           creado_en: string
@@ -274,12 +247,42 @@ export type Database = {
           },
         ]
       }
+      usuarios: {
+        Row: {
+          actualizado_en: string
+          avatar_url: string | null
+          baneado: boolean
+          creado_en: string
+          id: string
+          nombre_completo: string | null
+          rol: Database["public"]["Enums"]["rol_usuario"]
+        }
+        Insert: {
+          actualizado_en?: string
+          avatar_url?: string | null
+          baneado?: boolean
+          creado_en?: string
+          id: string
+          nombre_completo?: string | null
+          rol?: Database["public"]["Enums"]["rol_usuario"]
+        }
+        Update: {
+          actualizado_en?: string
+          avatar_url?: string | null
+          baneado?: boolean
+          creado_en?: string
+          id?: string
+          nombre_completo?: string | null
+          rol?: Database["public"]["Enums"]["rol_usuario"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      es_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       estado_prestamo: "activo" | "devuelto" | "vencido"

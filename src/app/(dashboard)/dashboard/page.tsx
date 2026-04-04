@@ -11,6 +11,7 @@ async function obtenerStatsServidor(): Promise<DashboardStats> {
     prestamosActivosRes,
     prestamosVencidosRes,
     usuariosRes,
+    usuariosBaneadosRes,
     ventasRes,
     ventasPrecioRes,
     prestamosConPrecioRes,
@@ -33,6 +34,7 @@ async function obtenerStatsServidor(): Promise<DashboardStats> {
       .select('*', { count: 'exact', head: true })
       .eq('estado', 'vencido'),
     supabase.from('usuarios').select('*', { count: 'exact', head: true }),
+    supabase.from('usuarios').select('*', { count: 'exact', head: true }).eq('baneado', true),
     supabase.from('compras').select('*', { count: 'exact', head: true }),
     supabase.from('compras').select('precio_compra'),
     supabase.from('prestamos').select('precio_prestamo').eq('estado', 'activo'),
@@ -50,6 +52,7 @@ async function obtenerStatsServidor(): Promise<DashboardStats> {
     prestamosActivos: prestamosActivosRes.count ?? 0,
     prestamosVencidos: prestamosVencidosRes.count ?? 0,
     totalUsuarios: usuariosRes.count ?? 0,
+    usuariosBaneados: usuariosBaneadosRes.count ?? 0,
     totalVentas: ventasRes.count ?? 0,
     ingresosPorVentas,
     valorEnPrestamos,

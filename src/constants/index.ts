@@ -15,4 +15,6 @@ export const RUTAS = {
   EDITORIALES_NUEVO: '/dashboard/editoriales/nuevo',
   CATEGORIAS_ADMIN: '/dashboard/categorias',
   CATEGORIAS_NUEVO: '/dashboard/categorias/nuevo',
+  USUARIOS_ADMIN: '/dashboard/usuarios',
+  OPERACIONES_ADMIN: '/dashboard/operaciones',
 } as const

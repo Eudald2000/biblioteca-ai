@@ -10,6 +10,7 @@ export type DashboardStats = {
   prestamosVencidos: number
   totalVentas: number
   totalUsuarios: number
+  usuariosBaneados: number
   ingresosPorVentas: number
   valorEnPrestamos: number
 }
@@ -32,6 +33,7 @@ async function obtenerStats(
     prestamosActivosRes,
     prestamosVencidosRes,
     usuariosRes,
+    usuariosBaneadosRes,
     ventasRes,
     ventasPrecioRes,
     prestamosConPrecioRes,
@@ -54,6 +56,7 @@ async function obtenerStats(
       .select('*', { count: 'exact', head: true })
       .eq('estado', 'vencido'),
     supabase.from('usuarios').select('*', { count: 'exact', head: true }),
+    supabase.from('usuarios').select('*', { count: 'exact', head: true }).eq('baneado', true),
     supabase.from('compras').select('*', { count: 'exact', head: true }),
     supabase.from('compras').select('precio_compra'),
     supabase.from('prestamos').select('precio_prestamo').eq('estado', 'activo'),
@@ -71,6 +74,7 @@ async function obtenerStats(
     prestamosActivos: prestamosActivosRes.count ?? 0,
     prestamosVencidos: prestamosVencidosRes.count ?? 0,
     totalUsuarios: usuariosRes.count ?? 0,
+    usuariosBaneados: usuariosBaneadosRes.count ?? 0,
     totalVentas: ventasRes.count ?? 0,
     ingresosPorVentas,
     valorEnPrestamos,
@@ -203,6 +207,20 @@ export function StatsGrid({ initialStats }: { initialStats: DashboardStats }) {
             strokeWidth={2}
             d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
           />
+        </svg>
+      ),
+    },
+    {
+      label: 'Usuarios baneados',
+      value: formatNumero(stats.usuariosBaneados),
+      iconBg:
+        stats.usuariosBaneados > 0
+          ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400'
+          : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+      icon: (
+        <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       ),
     },

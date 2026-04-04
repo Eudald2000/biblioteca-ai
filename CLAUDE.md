@@ -2,6 +2,16 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Estilo de Comunicación (Eficiencia de Tokens)
+
+Actúa como **Arquitecto Senior de Software**. Optimiza todas las respuestas para máxima eficiencia de tokens y precisión técnica:
+
+- **Sin relleno conversacional:** Prohibido usar cortesías, validaciones sociales o frases de transición como "Tienes razón", "Entiendo", "Buena idea" o "Procedo a...".
+- **Sin preámbulos:** Saltar directamente a la ejecución técnica, bloque de código o respuesta solicitada — sin explicar lo que se va a hacer, excepto en Modo Plan.
+- **Estilo "Explanatory" acotado:** Usar bloques de *Insight* breves solo para explicar trade-offs o decisiones arquitectónicas complejas; ser extremadamente conciso en el resto.
+- **Corrección directa:** Si las instrucciones contienen errores técnicos o inconsistencias con el proyecto, corregirlas de inmediato sin disculpas ni rodeos.
+- **Referencia por ruta:** No repetir código existente; usar `@ruta/al/archivo:línea` para indicar dónde aplicar cambios.
+
 ## Rol del Asistente
 
 Actúa como **Senior Full-Stack Engineer** con experiencia en Next.js, Supabase y TypeScript.
@@ -157,6 +167,19 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | 3 | Implementar **"Añadir al carrito"** en tarjeta y página de libro | Hito 5 — requiere tabla `carrito` en BD y página `/carrito` |
 | 4 | Crear página del **carrito de compra** (`/carrito`) | Ver items añadidos, cantidades y checkout |
 | 5 | Configurar **RLS completo** en todas las tablas | Actualmente permisivo para desarrollo — revisar antes de producción |
+| 6 | **Sistema de recordatorios por email** (préstamos vencidos) | Scaffolding listo — ver pasos abajo |
+
+### Recordatorios por email — pasos para activar
+
+1. Crear cuenta en [Resend](https://resend.com) y obtener API key
+2. Verificar dominio remitente (o usar `onboarding@resend.dev` en sandbox)
+3. Añadir secreto: `supabase secrets set RESEND_API_KEY=re_xxxx`
+4. En `supabase/functions/enviar-recordatorio/index.ts`: actualizar `FROM_EMAIL` y descomentar el bloque `fetch` a Resend
+5. Desplegar edge function: `supabase functions deploy enviar-recordatorio`
+6. Habilitar extensión `pg_net` en Supabase Dashboard → Database → Extensions
+7. Añadir `app.supabase_url` y `app.supabase_anon_key` como parámetros de BD o ajustar el trigger en `supabase/migrations/pending_trigger_recordatorio_vencido.sql`
+8. Ejecutar la migración del trigger via MCP
+9. En `src/app/actions/recordatorio.ts`: descomentar el bloque `fetch` a la edge function
 
 ## Hoja de Ruta (Hitos)
 
@@ -165,7 +188,7 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | 1 | Configuración inicial + estructura de carpetas | ✅ |
 | 2 | Esquema de base de datos en Supabase (Libros, Usuarios, Préstamos) | ✅ |
 | 3 | Autenticación con roles (Admin/User) y Middleware | ✅ |
-| 4 | Dashboard Administrativo | ✅ parcial |
+| 4 | Dashboard Administrativo | ✅ |
 | 5 | Catálogo público y flujo de préstamos/ventas | Pendiente |
 | 6 | Testing (Jest + RTL) | Pendiente |
 
@@ -177,9 +200,12 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | CRUD Libros | ✅ | Tabla con filtros, búsqueda, paginación, orden, toggle visible |
 | CRUD Editoriales | ✅ | Guard: no eliminar si tiene libros |
 | CRUD Categorías | ✅ | Guard: no eliminar si tiene libros |
-| CRUD Usuarios | Pendiente | Listar, ver detalle, cambiar rol, desactivar |
-| Gestión Préstamos | Pendiente | Listar, filtrar por estado, marcar como devuelto |
-| Gestión Ventas/Compras | Pendiente | Historial de compras por usuario/libro |
+| CRUD Usuarios | ✅ | Listar, ver detalle, cambiar rol, banear/desbanear, confirmación |
+| Gestión Préstamos | ✅ | /operaciones — filtros, marcar devuelto, auto-vencido a 15 días (pg_cron) |
+| Gestión Ventas/Compras | ✅ | /operaciones — historial con filtros por usuario y libro |
+| Middleware de baneo | ✅ | proxy.ts — corta sesión en tiempo real si el usuario es baneado |
+| Stats dashboard | ✅ | 9 métricas incluyendo usuarios baneados |
+| UX (sidebar activo, loading, confirmaciones) | ✅ | SidebarNav, loading.tsx, confirm dialogs |
 
 ### Hito 5 — Catálogo y flujo de transacciones (detalle)
 
