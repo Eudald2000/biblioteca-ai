@@ -168,6 +168,8 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | 4 | Crear página del **carrito de compra** (`/carrito`) | Ver items añadidos, cantidades y checkout |
 | 5 | Configurar **RLS completo** en todas las tablas | Actualmente permisivo para desarrollo — revisar antes de producción |
 | 6 | **Sistema de recordatorios por email** (préstamos vencidos) | Scaffolding listo — ver pasos abajo |
+| 7 | **Actualizar README** con Hito 5, enlace de deploy y screenshots | Hacer al finalizar el proyecto antes del deploy |
+| 8 | **Deploy en Vercel** y añadir URL pública al README y portafolio | Crear cuenta Vercel, conectar repo GitHub, añadir variables de entorno |
 
 ### Recordatorios por email — pasos para activar
 
@@ -191,21 +193,6 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | 4 | Dashboard Administrativo | ✅ |
 | 5 | Catálogo público y flujo de préstamos/ventas | Pendiente |
 | 6 | Testing (Jest + RTL) | Pendiente |
-
-### Hito 4 — Dashboard (detalle)
-
-| Sección | Estado | Notas |
-|---------|--------|-------|
-| Stats en tiempo real (inicio) | ✅ | 8 métricas con Supabase Realtime |
-| CRUD Libros | ✅ | Tabla con filtros, búsqueda, paginación, orden, toggle visible |
-| CRUD Editoriales | ✅ | Guard: no eliminar si tiene libros |
-| CRUD Categorías | ✅ | Guard: no eliminar si tiene libros |
-| CRUD Usuarios | ✅ | Listar, ver detalle, cambiar rol, banear/desbanear, confirmación |
-| Gestión Préstamos | ✅ | /operaciones — filtros, marcar devuelto, auto-vencido a 15 días (pg_cron) |
-| Gestión Ventas/Compras | ✅ | /operaciones — historial con filtros por usuario y libro |
-| Middleware de baneo | ✅ | proxy.ts — corta sesión en tiempo real si el usuario es baneado |
-| Stats dashboard | ✅ | 9 métricas incluyendo usuarios baneados |
-| UX (sidebar activo, loading, confirmaciones) | ✅ | SidebarNav, loading.tsx, confirm dialogs |
 
 ### Hito 5 — Catálogo y flujo de transacciones (detalle)
 
