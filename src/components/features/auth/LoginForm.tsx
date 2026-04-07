@@ -13,8 +13,8 @@ export function LoginForm({ mensajeBaneo = false }: { mensajeBaneo?: boolean }) 
   return (
     <form action={accion} noValidate className="flex flex-col gap-5">
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Iniciar sesión</h2>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <h2 className="text-xl font-semibold text-[#f5efe6]">Iniciar sesión</h2>
+        <p className="mt-1 text-sm text-[rgba(245,239,230,0.5)]">
           Accede a tu cuenta de la biblioteca
         </p>
       </div>
@@ -55,9 +55,9 @@ export function LoginForm({ mensajeBaneo = false }: { mensajeBaneo?: boolean }) 
         Iniciar sesión
       </Button>
 
-      <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-center text-sm text-[rgba(245,239,230,0.5)]">
         ¿No tienes cuenta?{' '}
-        <Link href={RUTAS.REGISTRO} className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+        <Link href={RUTAS.REGISTRO} className="font-medium text-[#f0b445] hover:underline">
           Regístrate
         </Link>
       </p>

@@ -13,8 +13,8 @@ export function RegisterForm() {
   return (
     <form action={accion} noValidate className="flex flex-col gap-5">
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Crear cuenta</h2>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <h2 className="text-xl font-semibold text-[#f5efe6]">Crear cuenta</h2>
+        <p className="mt-1 text-sm text-[rgba(245,239,230,0.5)]">
           Únete a la biblioteca virtual
         </p>
       </div>
@@ -71,9 +71,9 @@ export function RegisterForm() {
         Crear cuenta
       </Button>
 
-      <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-center text-sm text-[rgba(245,239,230,0.5)]">
         ¿Ya tienes cuenta?{' '}
-        <Link href={RUTAS.LOGIN} className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+        <Link href={RUTAS.LOGIN} className="font-medium text-[#f0b445] hover:underline">
           Inicia sesión
         </Link>
       </p>

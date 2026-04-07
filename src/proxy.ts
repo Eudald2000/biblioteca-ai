@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { RUTAS } from '@/constants'
 
-const RUTAS_PROTEGIDAS = [RUTAS.DASHBOARD, RUTAS.CATALOGO, RUTAS.CUENTA]
+const RUTAS_PROTEGIDAS = [RUTAS.DASHBOARD, RUTAS.CUENTA]
 const RUTAS_SOLO_INVITADOS = [RUTAS.LOGIN, RUTAS.REGISTRO]
 
 export async function proxy(request: NextRequest) {
