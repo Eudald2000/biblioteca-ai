@@ -31,18 +31,18 @@ export default async function CuentaPage() {
     <div className="mx-auto max-w-lg">
       {/* Avatar y datos principales */}
       <div className="mb-8 flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-2xl font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(212,149,42,0.15)] text-2xl font-bold text-[#f0b445]">
           {iniciales(usuario?.nombre_completo ?? null)}
         </div>
         <div>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+          <h2 className="text-xl font-bold text-[#f5efe6]">
             {usuario?.nombre_completo ?? 'Usuario'}
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+          <p className="text-sm text-[rgba(245,239,230,0.5)]">{user.email}</p>
           <span className={`mt-1 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
             esAdmin
-              ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300'
-              : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+              ? 'bg-[rgba(212,149,42,0.1)] text-[#f0b445]'
+              : 'bg-[rgba(255,255,255,0.05)] text-[rgba(245,239,230,0.5)]'
           }`}>
             {esAdmin ? 'Administrador' : 'Usuario'}
           </span>
@@ -50,32 +50,32 @@ export default async function CuentaPage() {
       </div>
 
       {/* Formulario de edición */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-        <h3 className="mb-5 text-base font-semibold text-gray-900 dark:text-white">
+      <div className="rounded-xl border border-[rgba(212,149,42,0.1)] bg-[rgba(255,255,255,0.03)] p-6 shadow-sm">
+        <h3 className="mb-5 text-base font-semibold text-[#f5efe6]">
           Editar información
         </h3>
 
         <div className="mb-5 flex flex-col gap-1.5">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Email</span>
-          <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
+          <span className="text-sm font-medium text-[rgba(245,239,230,0.5)]">Email</span>
+          <p className="rounded-lg border border-[rgba(212,149,42,0.1)] bg-[rgba(255,255,255,0.04)] px-3 py-2 text-sm text-[rgba(245,239,230,0.4)]">
             {user.email}
           </p>
-          <p className="text-xs text-gray-400">El email no se puede cambiar desde aquí.</p>
+          <p className="text-xs text-[rgba(245,239,230,0.3)]">El email no se puede cambiar desde aquí.</p>
         </div>
 
         <PerfilForm nombreActual={usuario?.nombre_completo ?? null} />
       </div>
 
       {/* Zona peligrosa */}
-      <div className="mt-6 rounded-xl border border-red-100 bg-white p-6 shadow-sm dark:border-red-900/30 dark:bg-gray-900">
-        <h3 className="mb-1 text-base font-semibold text-gray-900 dark:text-white">Sesión</h3>
-        <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+      <div className="mt-6 rounded-xl border border-red-900/30 bg-[rgba(255,255,255,0.03)] p-6 shadow-sm">
+        <h3 className="mb-1 text-base font-semibold text-[#f5efe6]">Sesión</h3>
+        <p className="mb-4 text-sm text-[rgba(245,239,230,0.5)]">
           Cierra tu sesión en este dispositivo.
         </p>
         <form action={cerrarSesion}>
           <button
             type="submit"
-            className="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950"
+            className="rounded-lg border border-red-800/50 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-950/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
           >
             Cerrar sesión
           </button>

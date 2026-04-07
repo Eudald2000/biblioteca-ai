@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      carrito: {
+        Row: {
+          cantidad: number
+          creado_en: string
+          id: string
+          libro_id: string
+          tipo: Database["public"]["Enums"]["tipo_item_carrito"]
+          usuario_id: string
+        }
+        Insert: {
+          cantidad?: number
+          creado_en?: string
+          id?: string
+          libro_id: string
+          tipo: Database["public"]["Enums"]["tipo_item_carrito"]
+          usuario_id: string
+        }
+        Update: {
+          cantidad?: number
+          creado_en?: string
+          id?: string
+          libro_id?: string
+          tipo?: Database["public"]["Enums"]["tipo_item_carrito"]
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "carrito_libro_id_fkey"
+            columns: ["libro_id"]
+            isOneToOne: false
+            referencedRelation: "libros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "carrito_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categorias: {
         Row: {
           actualizado_en: string
@@ -213,7 +255,7 @@ export type Database = {
           estado?: Database["public"]["Enums"]["estado_prestamo"]
           fecha_devolucion?: string | null
           fecha_prestamo?: string
-          fecha_vencimiento: string
+          fecha_vencimiento?: string
           id?: string
           libro_id: string
           precio_prestamo?: number
@@ -279,14 +321,57 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      usuarios_con_email: {
+        Row: {
+          actualizado_en: string | null
+          avatar_url: string | null
+          baneado: boolean | null
+          creado_en: string | null
+          email: string | null
+          id: string | null
+          nombre_completo: string | null
+          rol: Database["public"]["Enums"]["rol_usuario"] | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      detalle_usuario_admin: {
+        Args: { p_usuario_id: string }
+        Returns: {
+          baneado: boolean
+          creado_en: string
+          email: string
+          id: string
+          nombre_completo: string
+          rol: Database["public"]["Enums"]["rol_usuario"]
+        }[]
+      }
       es_admin: { Args: never; Returns: boolean }
+      listar_usuarios_admin: {
+        Args: {
+          p_busqueda?: string
+          p_limite?: number
+          p_offset?: number
+          p_rol?: string
+        }
+        Returns: {
+          baneado: boolean
+          creado_en: string
+          email: string
+          id: string
+          nombre_completo: string
+          rol: Database["public"]["Enums"]["rol_usuario"]
+          total: number
+        }[]
+      }
+      marcar_prestamos_vencidos: { Args: never; Returns: undefined }
+      puede_ver_usuarios_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       estado_prestamo: "activo" | "devuelto" | "vencido"
       rol_usuario: "admin" | "usuario"
+      tipo_item_carrito: "prestamo" | "compra"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -416,6 +501,7 @@ export const Constants = {
     Enums: {
       estado_prestamo: ["activo", "devuelto", "vencido"],
       rol_usuario: ["admin", "usuario"],
+      tipo_item_carrito: ["prestamo", "compra"],
     },
   },
 } as const

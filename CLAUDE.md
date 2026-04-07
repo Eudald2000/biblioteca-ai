@@ -97,6 +97,7 @@ src/
 - Orden de clases: utility-first, siguiendo el orden recomendado (layout, espaciado, tipografía, colores, efectos).
 - Usar `cn()` (clsx + tailwind-merge) para combinar clases condicionales.
 - Preferir clases utilitarias sobre CSS custom.
+- **Prohibido usar `<style>` inline dentro de componentes** — especialmente en Client Components. Los estilos globales van en `globals.css` bajo una directiva `@layer`; los estilos de componente se expresan con clases Tailwind. Esto evita conflictos de orden de carga CSS entre rutas.
 
 ### Accesibilidad
 - Usar etiquetas semánticas HTML (`main`, `section`, `nav`, etc.).

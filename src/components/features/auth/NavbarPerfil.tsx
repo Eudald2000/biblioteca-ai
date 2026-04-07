@@ -26,7 +26,7 @@ export function NavbarPerfil({ iniciales, nombre, email }: NavbarPerfilProps) {
       <button
         aria-label="Menú de perfil"
         aria-haspopup="true"
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700 transition hover:bg-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(212,149,42,0.15)] text-sm font-semibold text-[#f0b445] transition hover:bg-[rgba(212,149,42,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,149,42,0.5)]"
       >
         {pendiente ? (
           <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -42,14 +42,14 @@ export function NavbarPerfil({ iniciales, nombre, email }: NavbarPerfilProps) {
         className="invisible absolute right-0 top-full z-20 mt-2 w-52 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
       >
         {/* Triángulo decorativo */}
-        <div className="ml-auto mr-3 h-2 w-2 rotate-45 border-l border-t border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900" />
-        <div className="-mt-1 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
+        <div className="ml-auto mr-3 h-2 w-2 rotate-45 border-l border-t border-[rgba(212,149,42,0.15)] bg-[#0d0b08]" />
+        <div className="-mt-1 overflow-hidden rounded-xl border border-[rgba(212,149,42,0.15)] bg-[#110e0a] shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
           {/* Cabecera con info del usuario */}
-          <div className="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
-            <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+          <div className="border-b border-[rgba(212,149,42,0.1)] px-4 py-3">
+            <p className="truncate text-sm font-medium text-[#f5efe6]">
               {nombre ?? 'Usuario'}
             </p>
-            <p className="truncate text-xs text-gray-500 dark:text-gray-400">{email}</p>
+            <p className="truncate text-xs text-[rgba(245,239,230,0.45)]">{email}</p>
           </div>
 
           {/* Opciones */}
@@ -57,9 +57,9 @@ export function NavbarPerfil({ iniciales, nombre, email }: NavbarPerfilProps) {
             <Link
               href={RUTAS.CUENTA}
               role="menuitem"
-              className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800"
+              className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[rgba(245,239,230,0.7)] transition hover:bg-[rgba(212,149,42,0.08)] hover:text-[#f5efe6]"
             >
-              <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+              <svg className="h-4 w-4 text-[rgba(212,149,42,0.5)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
               </svg>
               Mi perfil
@@ -69,7 +69,7 @@ export function NavbarPerfil({ iniciales, nombre, email }: NavbarPerfilProps) {
               role="menuitem"
               onClick={handleLogout}
               disabled={pendiente}
-              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-50 dark:text-red-400 dark:hover:bg-red-950/30"
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-400 transition hover:bg-[rgba(239,68,68,0.08)] disabled:opacity-50"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
