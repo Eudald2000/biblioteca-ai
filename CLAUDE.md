@@ -171,29 +171,13 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 
 ### Reset demo automático
 
-Función `reset_demo_data()` + pg_cron ejecutándose cada 3 días a las 04:00 UTC.
-**Pendiente de implementar** — ver tarea pendiente abajo.
+Función `reset_demo_data()` + pg_cron activo (jobid: 3), ejecuta a las 04:00 UTC cada 3 días. Restaura catálogo completo, transacciones de muestra, usuarios del seed y contraseña del admin demo.
 
 ### Pendientes post-deploy
 
 | # | Tarea | Estado |
 |---|-------|--------|
-| 1 | Reset demo completo (`reset_demo_data()` + cron cada 3 días) | ⏳ Pendiente — aprobar y ejecutar via MCP |
-| 2 | Revisar **políticas RLS** — actualmente permisivas para desarrollo | Supabase Dashboard → Table Editor → RLS |
-
-### Sistema de recordatorios por email (opcional, post-deploy)
-
-Scaffolding listo en `src/app/actions/recordatorio.ts`. Para activar:
-
-1. Crear cuenta en [Resend](https://resend.com) y obtener API key
-2. Verificar dominio remitente (o usar `onboarding@resend.dev` en sandbox)
-3. Añadir secreto: `supabase secrets set RESEND_API_KEY=re_xxxx`
-4. En `supabase/functions/enviar-recordatorio/index.ts`: actualizar `FROM_EMAIL` y descomentar el bloque `fetch` a Resend
-5. Desplegar edge function: `supabase functions deploy enviar-recordatorio`
-6. Habilitar extensión `pg_net` en Supabase Dashboard → Database → Extensions
-7. Añadir `app.supabase_url` y `app.supabase_anon_key` como parámetros de BD o ajustar el trigger en `supabase/migrations/pending_trigger_recordatorio_vencido.sql`
-8. Ejecutar la migración del trigger via MCP
-9. En `src/app/actions/recordatorio.ts`: descomentar el bloque `fetch` a la edge function
+| 1 | Revisar **políticas RLS** — actualmente permisivas para desarrollo | Supabase Dashboard → Table Editor → RLS |
 
 ## Hoja de Ruta (Hitos)
 
