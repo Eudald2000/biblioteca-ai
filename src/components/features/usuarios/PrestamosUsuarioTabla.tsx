@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from 'react'
 import { cn } from '@/lib/utils'
-import { enviarRecordatorioPrestamo } from '@/app/actions/recordatorio'
 import { marcarDevuelto } from '@/app/actions/prestamos'
 
 type PrestamoFila = {
@@ -39,13 +38,6 @@ export function PrestamosUsuarioTabla({ prestamos }: { prestamos: PrestamoFila[]
   function handleDevuelto(id: string) {
     startTransition(async () => {
       const res = await marcarDevuelto(id)
-      showFeedback(id, res?.exito ?? res?.error ?? 'Error.', res?.exito ? 'ok' : 'err')
-    })
-  }
-
-  function handleRecordatorio(id: string) {
-    startTransition(async () => {
-      const res = await enviarRecordatorioPrestamo(id)
       showFeedback(id, res?.exito ?? res?.error ?? 'Error.', res?.exito ? 'ok' : 'err')
     })
   }
@@ -100,15 +92,6 @@ export function PrestamosUsuarioTabla({ prestamos }: { prestamos: PrestamoFila[]
                         className="rounded px-2 py-1 text-xs text-green-700 hover:bg-green-50 disabled:opacity-50 dark:text-green-400 dark:hover:bg-green-900/20"
                       >
                         ✓ Devuelto
-                      </button>
-                    )}
-                    {p.estado === 'vencido' && (
-                      <button
-                        disabled={isPending}
-                        onClick={() => handleRecordatorio(p.id)}
-                        className="rounded px-2 py-1 text-xs text-amber-600 hover:bg-amber-50 disabled:opacity-50 dark:text-amber-400 dark:hover:bg-amber-900/20"
-                      >
-                        📧 Recordatorio
                       </button>
                     )}
                     {fb && (
