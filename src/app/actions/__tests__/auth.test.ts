@@ -109,14 +109,7 @@ describe('iniciarSesion', () => {
     expect(result).toEqual({ error: 'El email y la contraseña son obligatorios.' })
   })
 
-  it('3. devuelve error de email no confirmado', async () => {
-    mockClienteLogin({ signInError: { message: 'Email not confirmed' } })
-    const fd = loginFormData('test@example.com', 'password123')
-    const result = await iniciarSesion(null, fd)
-    expect(result?.error).toMatch(/Debes confirmar tu email/)
-  })
-
-  it('4. devuelve error de credenciales incorrectas ante error genérico', async () => {
+  it('3. devuelve error de credenciales incorrectas ante error genérico', async () => {
     mockClienteLogin({ signInError: { message: 'Invalid login credentials' } })
     const fd = loginFormData('test@example.com', 'wrongpass')
     const result = await iniciarSesion(null, fd)

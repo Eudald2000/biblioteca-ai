@@ -13,8 +13,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Biblioteca Virtual',
-  description: 'Tu biblioteca digital de confianza. Préstamos, compras y gestión de libros.',
+  title: {
+    default: 'Biblioteca Virtual',
+    template: '%s | Biblioteca Virtual',
+  },
+  description: 'Plataforma de préstamo y compra de libros con panel de administración completo.',
+  metadataBase: new URL('https://biblioteca-ai.vercel.app'),
+  openGraph: {
+    title: 'Biblioteca Virtual',
+    description: 'Plataforma de préstamo y compra de libros con panel de administración completo.',
+    url: 'https://biblioteca-ai.vercel.app',
+    siteName: 'Biblioteca Virtual',
+    locale: 'es_ES',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({

@@ -1,66 +1,84 @@
 # Biblioteca Virtual
 
-Aplicación web fullstack para la gestión de una biblioteca digital con sistema de préstamos, compras y panel de administración completo.
+> Plataforma fullstack de préstamo y compra de libros con panel de administración completo.
 
-Desarrollada por **Eudald** como proyecto de portafolio.
+[![Live Demo](https://img.shields.io/badge/Demo-biblioteca--ai.vercel.app-d4952a?style=for-the-badge&logo=vercel&logoColor=white)](https://biblioteca-ai.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js_15-000?style=for-the-badge&logo=nextdotjs)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Supabase](https://img.shields.io/badge/Supabase-3ecf8e?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
+[![Tests](https://img.shields.io/badge/Tests-156_pasando-22c55e?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io)
 
 ---
 
-## Descripción
+## Demo en vivo
 
-Biblioteca Virtual permite a los usuarios explorar un catálogo de libros, solicitar préstamos y comprar títulos. Los administradores disponen de un dashboard completo para gestionar el inventario, los usuarios y todas las operaciones de la plataforma.
+**[biblioteca-ai.vercel.app](https://biblioteca-ai.vercel.app)**
 
-### Funcionalidades actuales
+Puedes explorar la aplicación con las siguientes credenciales de demo:
 
-**Catálogo público**
-- Listado de libros con búsqueda y filtros por categoría y editorial
-- Página de detalle de cada libro con sinopsis, precios y disponibilidad
+| Rol | Email | Contraseña |
+|-----|-------|-----------|
+| **Administrador** | `admin1@biblioteca.com` | `Admin1234!` |
+| **Usuario** | regístrate con cualquier email | mínimo 6 caracteres |
 
-**Autenticación**
-- Registro e inicio de sesión con email y contraseña
-- Roles diferenciados: `admin` y `usuario`
-- Protección de rutas por rol y verificación de baneo en tiempo real
+> Los datos de demo se restauran automáticamente cada 3 días. Si ves el catálogo vacío o las estadísticas en cero, es posible que alguien haya eliminado contenido — vuelve a comprobarlo en unas horas.
 
-**Dashboard administrativo** *(solo admins)*
-- Estadísticas en tiempo real: libros, usuarios, préstamos activos/vencidos, ingresos
-- CRUD completo de libros con gestión de stock, visibilidad y soft delete
-- CRUD de editoriales y categorías
-- Gestión de usuarios: cambiar rol, banear/desbanear, ver historial de actividad
-- Gestión de operaciones: préstamos (filtro por estado, marcar como devuelto) y compras
-- Auto-vencido de préstamos a los 15 días mediante `pg_cron`
+---
 
-**Próximamente**
-- Server Actions para pedir préstamo y comprar desde el catálogo
-- Carrito de compra
-- Historial personal del usuario
-- Sistema de recordatorios por email (Resend)
+## ¿Qué es esto?
+
+Biblioteca Virtual es una aplicación web construida como proyecto de portafolio por **Eudald**. Simula el sistema de gestión de una biblioteca digital real: los usuarios pueden explorar el catálogo, pedir préstamos y comprar libros; los administradores gestionan todo el contenido y las operaciones desde un dashboard completo.
+
+---
+
+## Funcionalidades
+
+### Para usuarios
+
+- **Catálogo** — listado de libros con búsqueda por título/autor y filtros por categoría y editorial
+- **Detalle de libro** — sinopsis, precios, disponibilidad, libros relacionados
+- **Carrito** — añadir préstamos y compras, ver totales por sección antes de confirmar
+- **Pedir préstamo** — se registra con fecha de vencimiento a 15 días; el estado cambia a *vencido* automáticamente mediante un cron job diario si no se devuelve a tiempo
+- **Comprar** — compra permanente con precio snapshot en el momento de la transacción
+- **Cuenta personal** — historial de préstamos (activo / devuelto / vencido) y compras con precio pagado
+- **Stock en tiempo real** — los libros sin stock muestran el badge *Agotado* y desactivan los botones
+
+### Para administradores
+
+- **Dashboard** — estadísticas en tiempo real: libros, usuarios registrados, préstamos activos/vencidos, ingresos totales
+- **Gestión de libros** — crear, editar, cambiar visibilidad en catálogo, soft delete (eliminar permanente protegido si tiene operaciones vinculadas)
+- **Gestión de editoriales y categorías** — CRUD completo con protección de borrado si hay libros asociados
+- **Gestión de usuarios** — ver todos los usuarios, cambiar rol (admin/usuario), banear/desbanear
+- **Operaciones** — ver todos los préstamos con filtro por estado, marcar devoluciones (restaura stock automáticamente); ver historial de compras
+- **Auto-vencido** — `pg_cron` marca como *vencido* cualquier préstamo cuya fecha de devolución haya pasado, una vez al día a las 00:05 UTC
 
 ---
 
 ## Stack tecnológico
 
-| Capa | Tecnología |
-|------|-----------|
-| Frontend | [Next.js 15](https://nextjs.org) — App Router, Server Components |
-| Lenguaje | TypeScript (strict) |
-| Estilos | Tailwind CSS v4 |
-| Base de datos | PostgreSQL via [Supabase](https://supabase.com) |
-| Autenticación | Supabase Auth con SSR cookies |
-| Seguridad | Row Level Security (RLS) en todas las tablas |
-| Tiempo real | Supabase Realtime |
-| Cron jobs | pg_cron (auto-vencido de préstamos) |
-| Deploy | Vercel *(próximamente)* |
+| Capa | Tecnología | Uso |
+|------|-----------|-----|
+| Frontend | [Next.js 15](https://nextjs.org) | App Router, Server Components, Server Actions |
+| Lenguaje | TypeScript (strict) | Tipado estricto en todo el proyecto |
+| Estilos | Tailwind CSS v4 | Utility-first, sin CSS personalizado |
+| Base de datos | PostgreSQL via [Supabase](https://supabase.com) | Esquema completo con RLS |
+| Autenticación | Supabase Auth (SSR) | Cookies de servidor, middleware de protección |
+| Seguridad | Row Level Security | Políticas por tabla y por rol |
+| Tiempo real | Supabase Realtime | Estadísticas del dashboard en vivo |
+| Cron jobs | pg_cron | Auto-vencido de préstamos y reset de datos demo |
+| Testing | Jest + React Testing Library | 156 tests, 19 suites |
+| Deploy | [Vercel](https://vercel.com) | CI/CD automático desde `master` |
 
 ---
 
-## Instalación y uso local
+## Instalación local
 
 ### Requisitos
 
 - Node.js 18+
 - Cuenta en [Supabase](https://supabase.com) con proyecto creado
 
-### Configuración
+### Pasos
 
 ```bash
 # 1. Clonar el repositorio
@@ -82,19 +100,22 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 ```
 
 ```bash
-# 4. Arrancar el servidor de desarrollo
+# 4. Aplicar el esquema y los datos de prueba
+# Ejecuta supabase/seed.sql desde el SQL Editor de tu proyecto Supabase
+
+# 5. Arrancar el servidor de desarrollo
 npm run dev
 ```
 
 Abre [http://localhost:3000](http://localhost:3000).
 
-### Comandos disponibles
+### Comandos
 
 ```bash
 npm run dev      # Servidor de desarrollo
-npm run build    # Compilación de producción
+npm run build    # Compilación de producción (valida TypeScript)
 npm run lint     # ESLint
-npm test         # Tests (Jest)
+npm test         # Tests (Jest + RTL)
 ```
 
 ---
@@ -104,33 +125,53 @@ npm test         # Tests (Jest)
 ```
 src/
 ├── app/
-│   ├── (auth)/          # Login y registro
-│   ├── (dashboard)/     # Panel admin (rutas protegidas)
-│   ├── (public)/        # Catálogo público
-│   └── actions/         # Server Actions
+│   ├── (auth)/          # Login y registro (layout propio)
+│   ├── (dashboard)/     # Panel admin (rutas protegidas, layout con sidebar)
+│   ├── (public)/        # Catálogo, detalle, carrito, cuenta
+│   └── actions/         # Server Actions (auth, libros, carrito, préstamos…)
 ├── components/
-│   ├── ui/              # Componentes genéricos
-│   ├── layout/          # Navbar, Sidebar
-│   └── features/        # Componentes por dominio
+│   ├── ui/              # Button, Input — componentes genéricos reutilizables
+│   ├── layout/          # SiteHeader, SidebarNav
+│   └── features/        # Componentes por dominio (auth, libros, carrito)
 ├── lib/
-│   └── supabase/        # Clientes server y client
-├── types/               # Tipos TypeScript del dominio
-├── constants/           # Constantes globales
-└── proxy.ts             # Middleware de autenticación y baneo
+│   └── supabase/        # Clientes server.ts y client.ts
+├── types/               # Interfaces TypeScript del dominio
+├── constants/           # Rutas, roles, estados
+└── middleware.ts         # Protección de rutas y verificación de baneo
 ```
 
 ---
 
 ## Roles y accesos
 
-| Ruta | Usuario no autenticado | Usuario autenticado | Admin |
-|------|----------------------|---------------------|-------|
+| Ruta | Sin sesión | Usuario | Admin |
+|------|-----------|---------|-------|
 | `/catalogo` | ✅ | ✅ | ✅ |
-| `/catalogo/[id]` | ✅ | ✅ | ✅ |
+| `/libros/[id]` | ✅ | ✅ | ✅ |
+| `/carrito` | ❌ | ✅ | ✅ |
 | `/cuenta` | ❌ | ✅ | ✅ |
 | `/dashboard` | ❌ | ❌ | ✅ |
+| `/dashboard/libros` | ❌ | ❌ | ✅ |
+| `/dashboard/usuarios` | ❌ | ❌ | ✅ |
+| `/dashboard/operaciones` | ❌ | ❌ | ✅ |
 
-Los usuarios baneados son desconectados automáticamente en la siguiente navegación.
+Los usuarios baneados son desconectados automáticamente en la siguiente navegación gracias al middleware.
+
+---
+
+## Tests
+
+156 tests distribuidos en 19 suites con 0 fallos:
+
+- **Server Actions** — `auth`, `libros`, `categorias`, `editoriales`, `prestamos`, `usuario`, `usuarios-admin`, `carrito`
+- **Componentes UI** — `Button`, `Input`
+- **Client Components** — `LoginForm`, `RegisterForm`, `BotonesAccionLibro`, `EliminarItemBtn`, `ConfirmarSeccionBtn`
+- **Utilidades** — `cn()` (clsx + tailwind-merge)
+
+```bash
+npm test                   # ejecutar todos los tests
+npm test -- --coverage     # con informe de cobertura
+```
 
 ---
 
@@ -138,10 +179,14 @@ Los usuarios baneados son desconectados automáticamente en la siguiente navegac
 
 | # | Hito | Estado |
 |---|------|--------|
-| 1 | Configuración inicial | ✅ |
-| 2 | Esquema de base de datos | ✅ |
-| 3 | Autenticación y middleware | ✅ |
+| 1 | Configuración inicial y estructura de carpetas | ✅ |
+| 2 | Esquema de base de datos en Supabase | ✅ |
+| 3 | Autenticación con roles y middleware | ✅ |
 | 4 | Dashboard administrativo | ✅ |
-| 5 | Catálogo y flujo de transacciones | 🔄 En progreso |
-| 6 | Testing (Jest + RTL) | Pendiente |
-| 7 | Deploy en Vercel | Pendiente |
+| 5 | Catálogo público y flujo de transacciones | ✅ |
+| 6 | Testing (Jest + RTL) | ✅ |
+| 7 | Deploy en Vercel | ✅ |
+
+---
+
+Desarrollado por **[Eudald](https://github.com/Eudald2000)** · [biblioteca-ai.vercel.app](https://biblioteca-ai.vercel.app)

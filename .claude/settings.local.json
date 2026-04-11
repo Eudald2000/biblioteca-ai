@@ -7,7 +7,14 @@
       "Bash(cd:*)",
       "Bash(npm run:*)",
       "Bash(npx skills:*)",
-      "Bash(grep -v \"^\\\\.$\\\\|^\\\\.\\\\.$\")"
+      "Bash(grep -v \"^\\\\.$\\\\|^\\\\.\\\\.$\")",
+      "Bash(cat jest.config.ts)",
+      "Bash(cat jest.config.js)",
+      "Bash(npm install:*)",
+      "Bash(npx jest:*)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "Bash(npm test:*)"
     ]
   }
 }

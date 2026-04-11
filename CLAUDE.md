@@ -28,7 +28,7 @@ Aplicación para préstamo, compra y venta de libros con gestión de usuarios (r
 - **TypeScript** — tipado estricto (`strict: true`)
 - **Tailwind CSS v4** — estilos utility-first
 - **Supabase** — PostgreSQL + Auth + Row Level Security + Storage
-- **Testing:** Jest / React Testing Library (configuración pendiente)
+- **Testing:** Jest / React Testing Library — 156 tests, 0 fallos
 - **Gestión de estado:** Zustand para estado global simple, TanStack Query para estado servidor
 
 ## Comandos Esenciales
@@ -157,29 +157,27 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | `compras` | `precio_compra` | Snapshot del precio en el momento de la compra |
 | `prestamos` | `precio_prestamo` | Snapshot del precio en el momento del préstamo |
 
-## Pendientes antes de producción
+## Deploy — Completado ✅
 
-> ⚠️ Estas configuraciones están desactivadas intencionalmente durante el desarrollo. **Deben activarse antes de desplegar a producción.**
+**URL producción:** [biblioteca-ai.vercel.app](https://biblioteca-ai.vercel.app)  
+**Credenciales demo:** `admin1@biblioteca.com` / `Admin1234!`
 
-| # | Tarea | Dónde |
-|---|-------|-------|
-| 1 | Activar **confirmación de email** al registrarse | Supabase Dashboard → Authentication → Providers → Email → "Confirm email" |
-| 2 | Configurar **RLS completo** en todas las tablas | Actualmente permisivo para desarrollo — revisar antes de producción |
-| 6 | **Sistema de recordatorios por email** (préstamos vencidos) | Scaffolding listo — ver pasos abajo |
-| 7 | **Actualizar README** con Hito 5, enlace de deploy y screenshots | Hacer al finalizar el proyecto antes del deploy |
-| 8 | **Deploy en Vercel** y añadir URL pública al README y portafolio | Crear cuenta Vercel, conectar repo GitHub, añadir variables de entorno |
+### Variables de entorno en Vercel
 
-### Recordatorios por email — pasos para activar
+| Variable | Valor |
+|----------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key del proyecto Supabase |
 
-1. Crear cuenta en [Resend](https://resend.com) y obtener API key
-2. Verificar dominio remitente (o usar `onboarding@resend.dev` en sandbox)
-3. Añadir secreto: `supabase secrets set RESEND_API_KEY=re_xxxx`
-4. En `supabase/functions/enviar-recordatorio/index.ts`: actualizar `FROM_EMAIL` y descomentar el bloque `fetch` a Resend
-5. Desplegar edge function: `supabase functions deploy enviar-recordatorio`
-6. Habilitar extensión `pg_net` en Supabase Dashboard → Database → Extensions
-7. Añadir `app.supabase_url` y `app.supabase_anon_key` como parámetros de BD o ajustar el trigger en `supabase/migrations/pending_trigger_recordatorio_vencido.sql`
-8. Ejecutar la migración del trigger via MCP
-9. En `src/app/actions/recordatorio.ts`: descomentar el bloque `fetch` a la edge function
+### Reset demo automático
+
+Función `reset_demo_data()` + pg_cron activo (jobid: 3), ejecuta a las 04:00 UTC cada 3 días. Restaura catálogo completo, transacciones de muestra, usuarios del seed y contraseña del admin demo.
+
+### Pendientes post-deploy
+
+| # | Tarea | Estado |
+|---|-------|--------|
+| 1 | Revisar **políticas RLS** — actualmente permisivas para desarrollo | Supabase Dashboard → Table Editor → RLS |
 
 ## Hoja de Ruta (Hitos)
 
@@ -190,20 +188,5 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | 3 | Autenticación con roles (Admin/User) y Middleware | ✅ |
 | 4 | Dashboard Administrativo | ✅ |
 | 5 | Catálogo público y flujo de préstamos/ventas | ✅ |
-| 6 | Testing (Jest + RTL) | Pendiente |
-
-### Hito 5 — Catálogo y flujo de transacciones (detalle)
-
-| Feature | Estado | Notas |
-|---------|--------|-------|
-| Catálogo público (listado) | ✅ | Filtra `visible=true AND eliminado_en IS NULL` |
-| Página de detalle de libro | ✅ | Muestra precios, editorial, categorías, sinopsis, libros relacionados |
-| Botones "Pedir préstamo" / "Añadir al carrito" en catálogo y detalle | ✅ | `BotonesAccionLibro` con prop `compact` para tarjetas |
-| Server Action "Pedir préstamo" | ✅ | Decrementa stock, inserta en `prestamos` con precio snapshot |
-| Server Action "Comprar libro" | ✅ | Decrementa stock, inserta en `compras` con precio snapshot |
-| Tabla `carrito` en BD | ✅ | UNIQUE(usuario_id, libro_id, tipo), RLS por usuario |
-| Página `/carrito` | ✅ | Dos secciones: préstamos y compras, con totales y confirmación |
-| Historial préstamos y compras en `/cuenta` | ✅ | Badge de estado (activo/devuelto/vencido), precio snapshot |
-| Badge carrito en header | ✅ | Se actualiza via `revalidatePath` tras cada mutación |
-| Validar préstamo duplicado | ✅ | En `confirmarPrestamos`: rechazar si el usuario ya tiene ese libro en préstamo activo |
-| Testing Hito 5 | ✅ | 21 tests unitarios de Server Actions del carrito (`src/app/actions/__tests__/carrito.test.ts`) |
+| 6 | Testing (Jest + RTL) | ✅ |
+| 7 | Deploy en Vercel | ✅ — [biblioteca-ai.vercel.app](https://biblioteca-ai.vercel.app) |
