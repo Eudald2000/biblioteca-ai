@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { RUTAS } from '@/constants'
+import { BotonesAccionLibro } from '@/components/features/libros/BotonesAccionLibro'
+import { LibrosRelacionados } from '@/components/features/libros/LibrosRelacionados'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -19,6 +21,7 @@ export default async function LibroPage({ params }: Props) {
         id, titulo, autor, isbn, descripcion, portada_url, precio_compra, precio_prestamo, stock, creado_en,
         editoriales (nombre, pais, sitio_web),
         libros_categorias (
+          categoria_id,
           categorias (nombre)
         )
       `)
@@ -31,9 +34,13 @@ export default async function LibroPage({ params }: Props) {
 
   if (!libro) notFound()
 
-  const categorias = (libro.libros_categorias as unknown as { categorias: { nombre: string } | null }[])
+  const categorias = (libro.libros_categorias as unknown as { categoria_id: string; categorias: { nombre: string } | null }[])
     ?.map((lc) => lc.categorias?.nombre)
     .filter((nombre): nombre is string => typeof nombre === 'string')
+
+  const categoriaIds = (libro.libros_categorias as unknown as { categoria_id: string; categorias: { nombre: string } | null }[])
+    ?.map((lc) => lc.categoria_id)
+    .filter((id): id is string => typeof id === 'string') ?? []
 
   const loginNext = `${RUTAS.LOGIN}?next=/libros/${id}`
 
@@ -97,22 +104,7 @@ export default async function LibroPage({ params }: Props) {
 
           {/* Botones de acción */}
           {user ? (
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <button
-                disabled
-                title="Disponible próximamente"
-                className="flex-1 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white opacity-80 transition hover:opacity-100 disabled:cursor-not-allowed"
-              >
-                Pedir préstamo
-              </button>
-              <button
-                disabled
-                title="Disponible próximamente"
-                className="flex-1 rounded-xl border border-[rgba(212,149,42,0.2)] px-6 py-3 text-sm font-semibold text-[rgba(245,239,230,0.6)] transition hover:border-[rgba(212,149,42,0.4)] disabled:cursor-not-allowed"
-              >
-                🛒 Añadir al carrito
-              </button>
-            </div>
+            <BotonesAccionLibro libroId={libro.id} stock={libro.stock} />
           ) : (
             <div className="flex flex-col gap-3 rounded-xl border border-[rgba(212,149,42,0.2)] bg-[rgba(212,149,42,0.06)] p-4">
               <p className="text-sm text-[rgba(245,239,230,0.6)]">
@@ -177,6 +169,12 @@ export default async function LibroPage({ params }: Props) {
           <p className="leading-relaxed text-[rgba(245,239,230,0.6)]">{libro.descripcion}</p>
         </div>
       )}
+
+      <LibrosRelacionados
+        libroActualId={libro.id}
+        autor={libro.autor}
+        categoriaIds={categoriaIds}
+      />
     </div>
   )
 }

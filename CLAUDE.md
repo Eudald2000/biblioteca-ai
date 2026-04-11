@@ -129,7 +129,7 @@ Si la tarea abarca múltiples áreas, activa las skills secuencialmente.
 
 1. **Planificación estricta:** activar `/plan` antes de cambios significativos. Esperar aprobación explícita.
 2. **Sin commits automáticos:** mostrar el `diff` y esperar confirmación antes de cada commit.
-3. **Subagentes para investigación:** usar para bases de código extensas o APIs externas.
+3. **Subagentes proactivos:** lanzar subagentes en paralelo siempre que la tarea contenga partes independientes (distintos archivos, distintas capas, DB + frontend, etc.). No esperar a que el usuario lo pida. Criterio: si dos subtareas no tienen dependencia de datos entre sí, van en paralelo. Si los agentes fallan por permisos, aplicar los cambios directamente sin reintentar el mismo agente.
 4. **Verificación continua:** tras cada hito, proporcionar comandos de test o validación.
 5. **Resumen final:** después de ejecutar los cambios, entregar un resumen estructurado que incluya:
    - **Archivos modificados o creados** (ruta y propósito breve).
@@ -164,10 +164,7 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | # | Tarea | Dónde |
 |---|-------|-------|
 | 1 | Activar **confirmación de email** al registrarse | Supabase Dashboard → Authentication → Providers → Email → "Confirm email" |
-| 2 | Implementar **"Pedir préstamo"** en tarjeta y página de libro | Hito 5 — `src/app/(public)/libros/[id]/page.tsx` + Server Action |
-| 3 | Implementar **"Añadir al carrito"** en tarjeta y página de libro | Hito 5 — requiere tabla `carrito` en BD y página `/carrito` |
-| 4 | Crear página del **carrito de compra** (`/carrito`) | Ver items añadidos, cantidades y checkout |
-| 5 | Configurar **RLS completo** en todas las tablas | Actualmente permisivo para desarrollo — revisar antes de producción |
+| 2 | Configurar **RLS completo** en todas las tablas | Actualmente permisivo para desarrollo — revisar antes de producción |
 | 6 | **Sistema de recordatorios por email** (préstamos vencidos) | Scaffolding listo — ver pasos abajo |
 | 7 | **Actualizar README** con Hito 5, enlace de deploy y screenshots | Hacer al finalizar el proyecto antes del deploy |
 | 8 | **Deploy en Vercel** y añadir URL pública al README y portafolio | Crear cuenta Vercel, conectar repo GitHub, añadir variables de entorno |
@@ -192,7 +189,7 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | 2 | Esquema de base de datos en Supabase (Libros, Usuarios, Préstamos) | ✅ |
 | 3 | Autenticación con roles (Admin/User) y Middleware | ✅ |
 | 4 | Dashboard Administrativo | ✅ |
-| 5 | Catálogo público y flujo de préstamos/ventas | Pendiente |
+| 5 | Catálogo público y flujo de préstamos/ventas | ✅ |
 | 6 | Testing (Jest + RTL) | Pendiente |
 
 ### Hito 5 — Catálogo y flujo de transacciones (detalle)
@@ -200,10 +197,13 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | Feature | Estado | Notas |
 |---------|--------|-------|
 | Catálogo público (listado) | ✅ | Filtra `visible=true AND eliminado_en IS NULL` |
-| Página de detalle de libro | ✅ | Muestra precios, editorial, categorías, sinopsis |
-| Server Action "Pedir préstamo" | Pendiente | Requiere: decrementar stock, insertar en `prestamos` con precio snapshot, validar disponibilidad |
-| Server Action "Comprar libro" | Pendiente | Requiere: decrementar stock, insertar en `compras` con precio snapshot |
-| Tabla `carrito` en BD | Pendiente | Campos: usuario_id, libro_id, cantidad, tipo (prestamo/compra) |
-| Página `/carrito` | Pendiente | Ver items, cantidades, checkout |
-| Página `/cuenta/prestamos` | Pendiente | Historial de préstamos del usuario, estado, devolución |
-| Página `/cuenta/compras` | Pendiente | Historial de compras del usuario |
+| Página de detalle de libro | ✅ | Muestra precios, editorial, categorías, sinopsis, libros relacionados |
+| Botones "Pedir préstamo" / "Añadir al carrito" en catálogo y detalle | ✅ | `BotonesAccionLibro` con prop `compact` para tarjetas |
+| Server Action "Pedir préstamo" | ✅ | Decrementa stock, inserta en `prestamos` con precio snapshot |
+| Server Action "Comprar libro" | ✅ | Decrementa stock, inserta en `compras` con precio snapshot |
+| Tabla `carrito` en BD | ✅ | UNIQUE(usuario_id, libro_id, tipo), RLS por usuario |
+| Página `/carrito` | ✅ | Dos secciones: préstamos y compras, con totales y confirmación |
+| Historial préstamos y compras en `/cuenta` | ✅ | Badge de estado (activo/devuelto/vencido), precio snapshot |
+| Badge carrito en header | ✅ | Se actualiza via `revalidatePath` tras cada mutación |
+| Validar préstamo duplicado | ✅ | En `confirmarPrestamos`: rechazar si el usuario ya tiene ese libro en préstamo activo |
+| Testing Hito 5 | ✅ | 21 tests unitarios de Server Actions del carrito (`src/app/actions/__tests__/carrito.test.ts`) |

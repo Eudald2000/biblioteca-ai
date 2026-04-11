@@ -21,7 +21,7 @@ export async function marcarDevuelto(prestamoId: string): Promise<PrestamoState>
 
   const { data: prestamo } = await supabase
     .from('prestamos')
-    .select('estado')
+    .select('estado, libro_id')
     .eq('id', prestamoId)
     .single()
 
@@ -35,8 +35,22 @@ export async function marcarDevuelto(prestamoId: string): Promise<PrestamoState>
 
   if (error) return { error: 'Error al actualizar el préstamo.' }
 
+  // Restaurar una unidad de stock al devolver el libro
+  const { data: libro } = await supabase
+    .from('libros')
+    .select('stock')
+    .eq('id', prestamo.libro_id)
+    .single()
+
+  await supabase
+    .from('libros')
+    .update({ stock: (libro?.stock ?? 0) + 1 })
+    .eq('id', prestamo.libro_id)
+
   revalidatePath('/dashboard/operaciones')
   revalidatePath('/dashboard/usuarios/[id]', 'page')
+  revalidatePath('/catalogo')
+  revalidatePath('/libros/[id]', 'page')
 
   return { exito: 'Préstamo marcado como devuelto.' }
 }
