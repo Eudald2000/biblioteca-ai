@@ -43,3 +43,15 @@ CREDENTIALS.local.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.swc
+
+# turbopack cache
+.turbo/
+
+# windows
+Thumbs.db
+
+# claude code — configuración y skills locales
+.claude/settings.local.json
+.claude/skills/
+.agents/
