@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { RUTAS } from '@/constants'
 import FiltrosCatalogo from '@/components/features/books/FiltrosCatalogo'
+import { BotonesAccionLibro } from '@/components/features/libros/BotonesAccionLibro'
 
 interface CatalogoPageProps {
   searchParams: Promise<{ titulo?: string; autor?: string; editorial_id?: string; categoria_id?: string }>
@@ -90,11 +91,18 @@ export default async function CatalogoPage({ searchParams }: CatalogoPageProps) 
                     src={libro.portada_url}
                     alt={`Portada de ${libro.titulo}`}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className={`object-cover transition-transform duration-300 group-hover:scale-105 ${libro.stock === 0 ? 'opacity-50' : ''}`}
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-4xl">📖</div>
+                  <div className={`flex h-full items-center justify-center text-4xl ${libro.stock === 0 ? 'opacity-40' : ''}`}>📖</div>
+                )}
+                {libro.stock === 0 && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="rounded-full bg-black/70 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-red-400">
+                      Agotado
+                    </span>
+                  </div>
                 )}
               </div>
             </Link>
@@ -117,28 +125,13 @@ export default async function CatalogoPage({ searchParams }: CatalogoPageProps) 
               </div>
 
               {/* Botones de acción */}
-              <div className="mt-2 flex flex-col gap-1.5">
+              <div className="mt-2">
                 {user ? (
-                  <>
-                    <button
-                      disabled
-                      title="Disponible próximamente"
-                      className="w-full rounded-lg bg-blue-600 px-2 py-1.5 text-xs font-medium text-white opacity-80 transition hover:opacity-100 disabled:cursor-not-allowed"
-                    >
-                      Pedir préstamo
-                    </button>
-                    <button
-                      disabled
-                      title="Disponible próximamente"
-                      className="w-full rounded-lg border border-[rgba(212,149,42,0.2)] px-2 py-1.5 text-xs font-medium text-[rgba(245,239,230,0.6)] transition hover:border-[rgba(212,149,42,0.4)] disabled:cursor-not-allowed"
-                    >
-                      🛒 Añadir al carrito
-                    </button>
-                  </>
+                  <BotonesAccionLibro libroId={libro.id} stock={libro.stock} compact />
                 ) : (
                   <Link
                     href={`${RUTAS.LOGIN}?next=/libros/${libro.id}`}
-                    className="w-full rounded-lg bg-blue-600 px-2 py-1.5 text-center text-xs font-medium text-white transition hover:bg-blue-700"
+                    className="block w-full rounded-lg bg-blue-600 px-2 py-1.5 text-center text-xs font-medium text-white transition hover:bg-blue-700"
                   >
                     Iniciar sesión
                   </Link>
