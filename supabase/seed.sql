@@ -23,7 +23,7 @@ INSERT INTO auth.users (
     '11111111-1111-1111-1111-111111111111',
     'authenticated', 'authenticated',
     'admin1@biblioteca.com',
-    crypt(encode(gen_random_bytes(32), 'hex'), gen_salt('bf')), now(),
+    crypt('Admin1234!', gen_salt('bf')), now(),
     '{"provider":"email","providers":["email"]}',
     '{"full_name":"Ana Martínez"}',
     now(), now()

@@ -20,9 +20,6 @@ export async function iniciarSesion(_prevState: AuthState, formData: FormData): 
   const { error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
-    if (error.message.includes('Email not confirmed')) {
-      return { error: 'Debes confirmar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.' }
-    }
     return { error: 'Email o contraseña incorrectos.' }
   }
 

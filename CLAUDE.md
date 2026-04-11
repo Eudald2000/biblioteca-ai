@@ -157,29 +157,29 @@ Cuando se ejecute `/compact` (o se alcance ~70–80% de tokens), el resumen **de
 | `compras` | `precio_compra` | Snapshot del precio en el momento de la compra |
 | `prestamos` | `precio_prestamo` | Snapshot del precio en el momento del préstamo |
 
-## Deploy — Estado y pendientes
+## Deploy — Completado ✅
 
-> Rama `deploy` creada, rebased sobre `master` (todos los hitos mergeados). Build de producción verificado: 0 errores.
+**URL producción:** [biblioteca-ai.vercel.app](https://biblioteca-ai.vercel.app)  
+**Credenciales demo:** `admin1@biblioteca.com` / `Admin1234!`
 
-### Variables de entorno necesarias en Vercel
+### Variables de entorno en Vercel
 
-| Variable | Dónde obtenerla |
-|----------|-----------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase Dashboard → Settings → API → Project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Dashboard → Settings → API → anon public key |
+| Variable | Valor |
+|----------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key del proyecto Supabase |
 
-### Pasos pendientes para completar el deploy
+### Reset demo automático
+
+Función `reset_demo_data()` + pg_cron ejecutándose cada 3 días a las 04:00 UTC.
+**Pendiente de implementar** — ver tarea pendiente abajo.
+
+### Pendientes post-deploy
 
 | # | Tarea | Estado |
 |---|-------|--------|
-| 1 | Crear cuenta en [vercel.com](https://vercel.com) | ⏳ Pendiente |
-| 2 | Conectar repo GitHub `Eudald2000/biblioteca-ai` en Vercel (rama `master`) | ⏳ Pendiente |
-| 3 | Añadir las 2 variables de entorno de Supabase en Vercel | ⏳ Pendiente |
-| 4 | Primer deploy → obtener URL `*.vercel.app` | ⏳ Pendiente |
-| 5 | Añadir URL de deploy a Supabase → Authentication → URL Configuration → Site URL | ⏳ Pendiente |
-| 6 | Activar **confirmación de email** al registrarse | Supabase Dashboard → Authentication → Providers → Email → "Confirm email" |
-| 7 | Revisar **políticas RLS** — actualmente permisivas para desarrollo | Supabase Dashboard → Table Editor → RLS |
-| 8 | Actualizar README con URL de deploy y screenshots | Tras obtener la URL en paso 4 |
+| 1 | Reset demo completo (`reset_demo_data()` + cron cada 3 días) | ⏳ Pendiente — aprobar y ejecutar via MCP |
+| 2 | Revisar **políticas RLS** — actualmente permisivas para desarrollo | Supabase Dashboard → Table Editor → RLS |
 
 ### Sistema de recordatorios por email (opcional, post-deploy)
 
@@ -205,4 +205,4 @@ Scaffolding listo en `src/app/actions/recordatorio.ts`. Para activar:
 | 4 | Dashboard Administrativo | ✅ |
 | 5 | Catálogo público y flujo de préstamos/ventas | ✅ |
 | 6 | Testing (Jest + RTL) | ✅ |
-| 7 | Deploy en Vercel | En progreso |
+| 7 | Deploy en Vercel | ✅ — [biblioteca-ai.vercel.app](https://biblioteca-ai.vercel.app) |
