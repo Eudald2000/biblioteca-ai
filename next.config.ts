@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'covers.openlibrary.org',
       },
+      {
+        protocol: 'https',
+        hostname: 'cysvnatgdsswmchqfohh.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
   },
 };

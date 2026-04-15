@@ -29,7 +29,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       {/* Sidebar */}
       <aside className="flex w-52 flex-col border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
         <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-800">
-          <Link href={RUTAS.DASHBOARD} className="text-base font-bold text-gray-900 dark:text-white">
+          <Link href="/" className="text-base font-bold text-gray-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
             📚 Biblioteca
           </Link>
         </div>

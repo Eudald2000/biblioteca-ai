@@ -7,7 +7,6 @@ import { createClient } from '@/lib/supabase/server'
 export type LibroFormState = { error?: string; exito?: string } | null
 
 const ISBN_REGEX = /^([0-9]{9}[0-9X]|[0-9]{13})$/
-const URL_REGEX = /^https?:\/\/.+/
 
 function validarCampos(formData: FormData): {
   titulo: string
@@ -36,7 +35,6 @@ function validarCampos(formData: FormData): {
   if (!autor) return { error: 'El autor es obligatorio.' }
   if (!editorial_id) return { error: 'La editorial es obligatoria.' }
   if (isbn && !ISBN_REGEX.test(isbn)) return { error: 'El ISBN debe tener 10 o 13 dígitos.' }
-  if (portada_url && !URL_REGEX.test(portada_url)) return { error: 'La URL de portada no es válida.' }
 
   const stock = parseInt(stockRaw, 10)
   if (isNaN(stock) || stock < 0) return { error: 'El stock debe ser un número entero >= 0.' }
@@ -143,8 +141,23 @@ export async function toggleVisibilidad(id: string, visible: boolean): Promise<v
 export async function eliminarLibroPermanente(id: string): Promise<void> {
   const supabase = await createClient()
 
+  // Obtener portada_url antes de borrar para limpiar Storage
+  const { data: libro } = await supabase
+    .from('libros')
+    .select('portada_url')
+    .eq('id', id)
+    .single()
+
   await supabase.from('libros_categorias').delete().eq('libro_id', id)
   await supabase.from('libros').delete().eq('id', id)
+
+  // Limpiar imagen del bucket si pertenece a Supabase Storage
+  if (libro?.portada_url?.includes('/storage/v1/object/public/portadas/')) {
+    const fileName = libro.portada_url.split('/portadas/').pop()
+    if (fileName) {
+      await supabase.storage.from('portadas').remove([fileName])
+    }
+  }
 
   revalidatePath('/dashboard/libros')
   redirect('/dashboard/libros')
