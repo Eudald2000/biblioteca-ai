@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
 import type { LibroFormState } from '@/app/actions/libros'
 import { RUTAS } from '@/constants'
 
@@ -35,9 +36,41 @@ type Props = {
 export function LibroForm({ editoriales, categorias, libro, action }: Props) {
   const [estado, accion, pendiente] = useActionState<LibroFormState, FormData>(action, null)
   const [portadaUrl, setPortadaUrl] = useState(libro?.portada_url ?? '')
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
   const categoriasSeleccionadas = libro?.libros_categorias.map((lc) => lc.categoria_id) ?? []
   const esEdicion = !!libro
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadError(null)
+    setUploading(true)
+
+    try {
+      const supabase = createClient()
+      const ext = file.name.split('.').pop() ?? 'jpg'
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+
+      const { error } = await supabase.storage
+        .from('portadas')
+        .upload(fileName, file, { upsert: false })
+
+      if (error) throw error
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('portadas')
+        .getPublicUrl(fileName)
+
+      setPortadaUrl(publicUrl)
+    } catch {
+      setUploadError('Error al subir la imagen. Inténtalo de nuevo.')
+    } finally {
+      setUploading(false)
+    }
+  }
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -140,30 +173,59 @@ export function LibroForm({ editoriales, categorias, libro, action }: Props) {
 
           {/* Columna derecha */}
           <div className="space-y-5">
-            {/* URL portada + preview */}
+            {/* Portada — subida de archivo */}
             <div className="flex flex-col gap-1.5">
-              <Input
-                label="URL de portada"
-                name="portada_url"
-                type="url"
-                value={portadaUrl}
-                onChange={(e) => setPortadaUrl(e.target.value)}
-                disabled={pendiente}
-                placeholder="https://…"
-                helper="Enlace directo a la imagen de portada"
-              />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Portada
+              </span>
+
+              {/* Preview */}
               {portadaUrl && (
-                <div className="mt-1 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+                <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={portadaUrl}
                     alt="Vista previa de portada"
-                    className="h-40 w-full object-contain bg-gray-50 dark:bg-gray-800"
-                    onError={(e) => (e.currentTarget.style.display = 'none')}
-                    onLoad={(e) => (e.currentTarget.style.display = 'block')}
+                    className="h-48 w-full object-contain bg-gray-50 dark:bg-gray-800"
                   />
                 </div>
               )}
+
+              {/* Drop zone */}
+              <div className={cn(
+                'relative flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed px-4 py-6 text-center transition',
+                uploading
+                  ? 'border-blue-300 bg-blue-50 dark:border-blue-700 dark:bg-blue-900/20'
+                  : 'border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500',
+                (pendiente || uploading) && 'cursor-not-allowed opacity-60',
+              )}>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleFileChange}
+                  disabled={pendiente || uploading}
+                  className="absolute inset-0 cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                  aria-label="Subir imagen de portada"
+                />
+                <svg className="size-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {uploading
+                    ? 'Subiendo imagen…'
+                    : portadaUrl
+                      ? 'Haz clic para cambiar la portada'
+                      : 'Haz clic para subir una portada'}
+                </p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">JPG, PNG o WebP · máx. 5 MB</p>
+              </div>
+
+              {uploadError && (
+                <p className="text-xs text-red-500 dark:text-red-400">{uploadError}</p>
+              )}
+
+              {/* Campo oculto con la URL resultante */}
+              <input type="hidden" name="portada_url" value={portadaUrl} />
             </div>
 
             <div className="grid grid-cols-3 gap-3">
@@ -234,7 +296,7 @@ export function LibroForm({ editoriales, categorias, libro, action }: Props) {
           >
             Cancelar
           </Link>
-          <Button type="submit" loading={pendiente}>
+          <Button type="submit" loading={pendiente} disabled={uploading}>
             {esEdicion ? 'Guardar cambios' : 'Crear libro'}
           </Button>
         </div>

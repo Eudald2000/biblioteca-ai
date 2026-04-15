@@ -126,7 +126,7 @@ ON CONFLICT (id) DO NOTHING;
 -- ============================================================
 -- 4. LIBROS
 -- ============================================================
-INSERT INTO libros (id, titulo, autor, isbn, editorial_id, descripcion, stock, precio_compra, precio_prestamo) VALUES
+INSERT INTO libros (id, titulo, autor, isbn, editorial_id, descripcion, stock, precio_compra, precio_prestamo, portada_url) VALUES
   (
     'cccccccc-0001-0000-0000-000000000000',
     'Don Quijote de la Mancha',
@@ -134,7 +134,8 @@ INSERT INTO libros (id, titulo, autor, isbn, editorial_id, descripcion, stock, p
     '9788408163435',
     'aaaaaaaa-0001-0000-0000-000000000000',
     'La obra cumbre de la literatura española, considerada la primera novela moderna.',
-    8, 18.90, 4.73
+    8, 18.90, 4.73,
+    'https://covers.openlibrary.org/b/isbn/9788408163435-L.jpg'
   ),
   (
     'cccccccc-0002-0000-0000-000000000000',
@@ -143,7 +144,8 @@ INSERT INTO libros (id, titulo, autor, isbn, editorial_id, descripcion, stock, p
     '9788497592208',
     'aaaaaaaa-0002-0000-0000-000000000000',
     'La saga de la familia Buendía en el mítico Macondo, obra cumbre del realismo mágico.',
-    5, 21.50, 5.38
+    5, 21.50, 5.38,
+    'https://covers.openlibrary.org/b/isbn/9788497592208-L.jpg'
   ),
   (
     'cccccccc-0003-0000-0000-000000000000',
@@ -152,7 +154,8 @@ INSERT INTO libros (id, titulo, autor, isbn, editorial_id, descripcion, stock, p
     '9788499890944',
     'aaaaaaaa-0006-0000-0000-000000000000',
     'Una distopía sobre el totalitarismo y la vigilancia en un futuro opresivo.',
-    10, 14.95, 3.74
+    10, 14.95, 3.74,
+    'https://covers.openlibrary.org/b/isbn/9788499890944-L.jpg'
   ),
   (
     'cccccccc-0004-0000-0000-000000000000',
@@ -161,7 +164,8 @@ INSERT INTO libros (id, titulo, autor, isbn, editorial_id, descripcion, stock, p
     '9788408074359',
     'aaaaaaaa-0001-0000-0000-000000000000',
     'Un joven descubre un libro misterioso en el Cementerio de los Libros Olvidados de Barcelona.',
-    6, 19.95, 4.99
+    6, 19.95, 4.99,
+    'https://covers.openlibrary.org/b/isbn/9788408074359-L.jpg'
   ),
   (
     'cccccccc-0005-0000-0000-000000000000',
@@ -170,7 +174,8 @@ INSERT INTO libros (id, titulo, autor, isbn, editorial_id, descripcion, stock, p
     '9788466338981',
     'aaaaaaaa-0004-0000-0000-000000000000',
     'La épica historia de Paul Atreides en el desértico planeta Arrakis.',
-    4, 22.00, 5.50
+    4, 22.00, 5.50,
+    'https://covers.openlibrary.org/b/isbn/9788466338981-L.jpg'
   ),
   (
     'cccccccc-0006-0000-0000-000000000000',
@@ -179,7 +184,8 @@ INSERT INTO libros (id, titulo, autor, isbn, editorial_id, descripcion, stock, p
     '9788401352836',
     'aaaaaaaa-0004-0000-0000-000000000000',
     'Las memorias del legendario mago Kvothe narradas en primera persona.',
-    7, 23.90, 5.98
+    7, 23.90, 5.98,
+    'https://covers.openlibrary.org/b/isbn/9788401352836-L.jpg'
   )
 ON CONFLICT (id) DO NOTHING;
 
