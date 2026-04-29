@@ -11,6 +11,7 @@ export function CursorGlow() {
   const isHovered = useRef(false)
   const dotScale = useRef(1)
   const ringScale = useRef(1)
+  const colorT = useRef(0) // 0 = naranja, 1 = blanco
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -32,15 +33,22 @@ export function CursorGlow() {
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 
     const animate = () => {
-      const targetDot = isHovered.current ? 2.2 : 1
-      const targetRing = isHovered.current ? 1.8 : 1
+      const target = isHovered.current ? 1 : 0
+      colorT.current = lerp(colorT.current, target, 0.12)
+      dotScale.current = lerp(dotScale.current, isHovered.current ? 1.5 : 1, 0.15)
+      ringScale.current = lerp(ringScale.current, isHovered.current ? 1.4 : 1, 0.1)
 
-      dotScale.current = lerp(dotScale.current, targetDot, 0.15)
-      ringScale.current = lerp(ringScale.current, targetRing, 0.1)
+      // Interpolar color: naranja (212,149,42) → blanco (255,255,255)
+      const t = colorT.current
+      const r = Math.round(lerp(212, 255, t))
+      const g = Math.round(lerp(149, 255, t))
+      const b = Math.round(lerp(42, 255, t))
+      const a = lerp(0.9, 1, t)
 
       if (glowRef.current) {
         glowRef.current.style.transform =
           `translate(${pos.current.x}px, ${pos.current.y}px) scale(${dotScale.current.toFixed(3)})`
+        glowRef.current.style.background = `rgba(${r},${g},${b},${a.toFixed(2)})`
       }
 
       ringPos.current.x = lerp(ringPos.current.x, pos.current.x, 0.1)
@@ -49,9 +57,8 @@ export function CursorGlow() {
       if (ringRef.current) {
         ringRef.current.style.transform =
           `translate(${ringPos.current.x.toFixed(2)}px, ${ringPos.current.y.toFixed(2)}px) scale(${ringScale.current.toFixed(3)})`
-        ringRef.current.style.borderColor = isHovered.current
-          ? 'rgba(212, 149, 42, 0.85)'
-          : 'rgba(212, 149, 42, 0.45)'
+        const rOpacity = lerp(0.45, 0.8, t)
+        ringRef.current.style.borderColor = `rgba(${r},${g},${b},${rOpacity.toFixed(2)})`
       }
 
       rafRef.current = requestAnimationFrame(animate)
@@ -84,7 +91,7 @@ export function CursorGlow() {
           borderRadius: '50%',
           background: 'rgba(212, 149, 42, 0.9)',
           pointerEvents: 'none',
-          zIndex: 99,
+          zIndex: 9999,
           mixBlendMode: 'screen',
           filter: 'blur(1px)',
           transform: 'translate(-200px, -200px)',
@@ -104,7 +111,7 @@ export function CursorGlow() {
           borderRadius: '50%',
           border: '1.5px solid rgba(212, 149, 42, 0.45)',
           pointerEvents: 'none',
-          zIndex: 98,
+          zIndex: 9998,
           background: 'radial-gradient(circle, rgba(212,149,42,0.06) 0%, transparent 70%)',
           transform: 'translate(-200px, -200px)',
         }}
