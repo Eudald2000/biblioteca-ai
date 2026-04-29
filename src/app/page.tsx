@@ -4,7 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 import { RUTAS } from '@/constants'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SiteFooter } from '@/components/layout/SiteFooter'
-import { CursorGlow } from '@/components/ui/CursorGlow'
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -213,8 +212,6 @@ export default async function HomePage() {
         <SiteHeader />
 
         <div className="landing">
-
-        <CursorGlow />
 
         {/* Orbs de fondo */}
         <div className="orb orb-1" />

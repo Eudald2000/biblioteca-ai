@@ -321,19 +321,7 @@ export type Database = {
       }
     }
     Views: {
-      usuarios_con_email: {
-        Row: {
-          actualizado_en: string | null
-          avatar_url: string | null
-          baneado: boolean | null
-          creado_en: string | null
-          email: string | null
-          id: string | null
-          nombre_completo: string | null
-          rol: Database["public"]["Enums"]["rol_usuario"] | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       detalle_usuario_admin: {
